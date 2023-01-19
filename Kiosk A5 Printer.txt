@@ -1,0 +1,235 @@
+ private void button1_Click_1(object sender, EventArgs e)
+        {
+            PrinterSettings ps = new PrinterSettings();
+            PrintDocument pd = new PrintDocument();
+
+            pd.PrinterSettings = ps;
+
+            IEnumerable<PaperSize> paperSizes = ps.PaperSizes.Cast<PaperSize>();
+            PaperSize sizeA5 = paperSizes.First<PaperSize>(size => size.Kind == PaperKind.A4); // setting paper size to A4 size
+            pd.DefaultPageSettings.PaperSize = sizeA5;
+            pd.DefaultPageSettings.Margins = new Margins(3, 3, 3, 3);
+
+            // printDocument1.PrintPage += new PrintPageEventHandler(pd_PrintPage);
+            pd.PrintPage += new PrintPageEventHandler(pd_PrintPage);
+
+            //  pd.Print();
+            printPreviewDialog1.Document = pd;
+            printPreviewDialog1.ShowDialog();
+
+            //DialogResult pdr = printDialog1.ShowDialog();
+            //if (pdr == DialogResult.OK)
+            //{
+            //    printDocument1.Print();
+            //}
+        }
+
+   private void pd_PrintPage(Object sender,System.Drawing.Printing.PrintPageEventArgs e)
+        {
+           
+            Font myFont = new Font("Arial",7);
+            Font fontBold = new Font("Arial",7,System.Drawing.FontStyle.Bold);
+           
+            SolidBrush sBrush = new SolidBrush(Color.Black);
+            Pen myPen = new Pen(Color.Black);
+
+            string komut = "select ISN.ID AS [Cizelge Numarasi],ISN.TARIH AS [Tarih],ISN.YAPILAN_IS AS [Yapilan Is],CONVERT(CHAR(5),ISN.BASLANGIC_SAAT,108) AS [Baslangic Saati],CONVERT(CHAR(5),ISN.BITIS_SAAT,108)AS [Bitis Saati],ISN.KAYIT_TARIHI AS [Kayit Tarihi] from CIZELGE..CZ_IS ISN Left Outer join CIZELGE.dbo.CZ_PERSONEL p on ISN.PERSONEL_ID=p.ID where(ISN.TARIH between convert(datetime,'" + haftaBas + "',104) and convert(datetime,'" + haftaBit + "',104)) and p.ID ='" + comboPersonel.SelectedValue + "'";
+
+            SqlDataAdapter adp = new SqlDataAdapter(komut, baglanti);
+            DataTable dTable = new DataTable();
+            adp.Fill(dTable);
+            
+            if (dTable.Rows.Count > 0)
+            {
+                foreach (DataRow item in dTable.Rows)
+                {
+                    e.Graphics.DrawString("Ýþyeri Adý :", fontBold, sBrush, 30, 20);
+                    e.Graphics.DrawString("UÐURLU OTO CAM SAN TÝC AÞ :", myFont, sBrush, 110, 20);
+
+                    e.Graphics.DrawString("Ýþyeri SGK No :", fontBold, sBrush, 340, 20);
+                    e.Graphics.DrawString("123123151315151312555", myFont, sBrush, 425, 20);
+
+                    e.Graphics.DrawString("Dönem :", fontBold, sBrush, 570, 20);
+                    e.Graphics.DrawString("2018 / Ocak", myFont, sBrush, 620, 20);
+
+                    #region 1_Blok
+
+                    int blok1_1_x = 30;
+                    int blok1_1_y = 60;
+                    int blok1_2_x = 150;
+
+                    e.Graphics.DrawLine(myPen, blok1_1_x, (blok1_1_x + 5), 770, (blok1_1_x + 5));
+
+                    e.Graphics.DrawString("Personel No :", myFont, sBrush, blok1_1_x, blok1_1_y);
+                    e.Graphics.DrawString(item["Tarih"].ToString(), myFont, sBrush, blok1_2_x, blok1_1_y);
+
+                    e.Graphics.DrawString("Adý Soyadý :", myFont, sBrush, blok1_1_x, (blok1_1_y+20));
+                    e.Graphics.DrawString(item["Tarih"].ToString(), myFont, sBrush, blok1_2_x, (blok1_1_y + 20));
+
+                    e.Graphics.DrawString("T.C Kimlik No :", myFont, sBrush, blok1_1_x, (blok1_1_y + 40));
+                    e.Graphics.DrawString(item["Tarih"].ToString(), myFont, sBrush, blok1_2_x, (blok1_1_y + 40));
+
+                    e.Graphics.DrawString("SGK Sicil No :", myFont, sBrush, blok1_1_x, (blok1_1_y + 60));
+                    e.Graphics.DrawString(item["Tarih"].ToString(), myFont, sBrush, blok1_2_x, (blok1_1_y + 60));
+
+                    e.Graphics.DrawString("Görev :", myFont, sBrush, blok1_1_x, (blok1_1_y + 80));
+                    e.Graphics.DrawString(item["Tarih"].ToString(), myFont, sBrush, blok1_2_x, (blok1_1_y + 80));
+
+                    e.Graphics.DrawString("Unvan :", myFont, sBrush, blok1_1_x, (blok1_1_y + 100));
+                    e.Graphics.DrawString(item["Tarih"].ToString(), myFont, sBrush, blok1_2_x, (blok1_1_y + 100));
+
+                    e.Graphics.DrawString("Pozisyon :", myFont, sBrush, blok1_1_x, (blok1_1_y + 120));
+                    e.Graphics.DrawString(item["Tarih"].ToString(), myFont, sBrush, blok1_2_x, (blok1_1_y + 120));
+
+                    e.Graphics.DrawString("Ücret Tipi :", myFont, sBrush, blok1_1_x, (blok1_1_y + 140));
+                    e.Graphics.DrawString(item["Tarih"].ToString(), myFont, sBrush, blok1_2_x, (blok1_1_y + 140));
+
+                    e.Graphics.DrawString("Ücreti :", myFont, sBrush, blok1_1_x, (blok1_1_y + 160));
+                    e.Graphics.DrawString(item["Tarih"].ToString(), myFont, sBrush, blok1_2_x, (blok1_1_y + 160));
+
+                    e.Graphics.DrawString("Gruba Giriþ Tarihi :", myFont, sBrush, blok1_1_x, (blok1_1_y + 180));
+                    e.Graphics.DrawString(item["Tarih"].ToString(), myFont, sBrush, blok1_2_x, (blok1_1_y + 180));
+
+                    e.Graphics.DrawString("Ýþe Giriþ/Çýkýþ Tarihi :", myFont, sBrush, blok1_1_x, (blok1_1_y + 200));
+                    e.Graphics.DrawString(item["Tarih"].ToString(), myFont, sBrush, blok1_2_x, (blok1_1_y + 200));
+
+                 
+
+                    e.Graphics.DrawString("ÇALIÞMA TÜRLERÝ", myFont, sBrush, 30, 365);
+                    e.Graphics.DrawString("GÜN", myFont, sBrush, 130, 365);
+                    e.Graphics.DrawString("SAAT", myFont, sBrush, 170, 365);
+                    e.Graphics.DrawString("BRÜT", myFont, sBrush, 210, 365);
+                    e.Graphics.DrawString("NET", myFont, sBrush, 260, 365);
+
+                    e.Graphics.DrawLine(myPen, 30,380, 290, 380);
+
+                    e.Graphics.DrawString("Ýþ Günü", myFont, sBrush, 30, 385);
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 130, 385);
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 170, 385);
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 210, 385);
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 260, 385);
+
+                    e.Graphics.DrawString("Toplam Çalýþma", myFont, sBrush, 30, 425);
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 130, 425);
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 170, 425);
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 210, 425);
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 260, 425);
+                    #endregion
+                    #region 2_Blok
+
+                    int blok2_1_x = 340;
+                    int blok2_1_y = 60;
+                    int blok2_2_x = 470;
+
+                    e.Graphics.DrawString("YASAL KESÝNTÝLER", fontBold, sBrush, blok2_1_x, blok2_1_y);
+
+                    e.Graphics.DrawString("SGK Gün :", myFont, sBrush, blok2_1_x, (blok2_1_y + 20));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 20));
+
+                    e.Graphics.DrawString("SGK Matrahý :", myFont, sBrush, blok2_1_x, (blok2_1_y + 40));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 40));
+
+                    e.Graphics.DrawString("SGK Primi :", myFont, sBrush, blok2_1_x, (blok2_1_y + 60));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 60));
+
+                    e.Graphics.DrawString("Ýþsizlik Sig. MAtrahý :", myFont, sBrush, blok2_1_x, (blok2_1_y + 80));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 80));
+
+                    e.Graphics.DrawString("Ýþsizlik Sig. Ýþçi Kesintisi :", myFont, sBrush, blok2_1_x, (blok2_1_y + 100));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 100));
+
+                    e.Graphics.DrawString("Aylýk Gel. Ver. Matrahý :", myFont, sBrush, blok2_1_x, (blok2_1_y + 120));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 120));
+
+                    e.Graphics.DrawString("Toplam Gel. Ver. Matrahý :", myFont, sBrush, blok2_1_x, (blok2_1_y + 140));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 140));
+
+                    e.Graphics.DrawString("Gelir Vergi Tutarý :", myFont, sBrush, blok2_1_x, (blok2_1_y + 160));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 160));
+
+                    e.Graphics.DrawString("Damga Vergi Tutarý :", myFont, sBrush, blok2_1_x, (blok2_1_y + 180));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 180));
+
+                    e.Graphics.DrawString("Yasal Kesintiler Toplamý :", myFont, sBrush, blok2_1_x, (blok2_1_y + 200));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 200));
+
+                    e.Graphics.DrawString("AGÝ Matrahý :", myFont, sBrush, blok2_1_x, (blok2_1_y + 220));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 220));
+
+                    e.Graphics.DrawString("AGÝ Oraný :", myFont, sBrush, blok2_1_x, (blok2_1_y + 240));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 240));
+
+                    e.Graphics.DrawString("AGÝ Tutarý :", myFont, sBrush, blok2_1_x, (blok2_1_y + 260));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 260));
+
+                    e.Graphics.DrawString("Brüt Ücret :", myFont, sBrush, blok2_1_x, (blok2_1_y + 280));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 280));
+
+                    e.Graphics.DrawString("Net Ücret :", myFont, sBrush, blok2_1_x, (blok2_1_y + 300));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 300));
+
+                    e.Graphics.DrawString("Net Ödenen :", myFont, sBrush, blok2_1_x, (blok2_1_y + 320));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok2_2_x, (blok2_1_y + 320));
+                    #endregion
+                    #region 3_Blok
+
+                    int blok3_1_x = 525;
+                    int blok3_1_y = 60;
+                    int blok3_2_x = 660; 
+
+                    e.Graphics.DrawString("EK KESÝNTÝLER", fontBold, sBrush, blok3_1_x, blok3_1_y);
+
+                    e.Graphics.DrawString("Kesinti Adý", myFont, sBrush, blok3_1_x, (blok3_1_y + 20));
+                    e.Graphics.DrawString("Tutar", myFont, sBrush, blok3_2_x, (blok3_1_y + 20));
+
+                    e.Graphics.DrawString("Normal Avans", myFont, sBrush, blok3_1_x, (blok3_1_y + 40));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok3_2_x, (blok3_1_y + 40));
+
+                    e.Graphics.DrawString("Zorunlu BES", myFont, sBrush, blok3_1_x, (blok3_1_y + 60));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, blok3_2_x, (blok3_1_y + 60));
+
+                    e.Graphics.DrawString("Ek Kesintiler Toplamlar", fontBold, sBrush, blok3_1_x, (blok3_1_y + 80));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), fontBold, sBrush, blok3_2_x, (blok3_1_y + 80));
+
+                    e.Graphics.DrawString("EK GELÝR", fontBold, sBrush, blok3_1_x, (blok3_1_y + 110));
+                    e.Graphics.DrawLine(myPen, blok3_1_x, (blok3_1_y + 120), 575, (blok3_1_y + 120));
+                    e.Graphics.DrawString("SAAT", fontBold, sBrush, 595, (blok3_1_y + 110));
+                    e.Graphics.DrawLine(myPen, 595, (blok3_1_y + 120), 620, (blok3_1_y + 120));
+                    e.Graphics.DrawString("NET", fontBold, sBrush, 645, (blok3_1_y + 110));
+                    e.Graphics.DrawLine(myPen, 645, (blok3_1_y + 120), 665, (blok3_1_y + 120));
+                    e.Graphics.DrawString("BRÜT", fontBold, sBrush, 705, (blok3_1_y + 110));
+                    e.Graphics.DrawLine(myPen, 705, (blok3_1_y + 120), 735, (blok3_1_y + 120));
+
+                    e.Graphics.DrawString("FM1", fontBold, sBrush, blok3_1_x, (blok3_1_y + 130));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 595, (blok3_1_y + 130));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 645, (blok3_1_y + 130));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 705, (blok3_1_y + 130));
+
+                    e.Graphics.DrawString("FM2", fontBold, sBrush, blok3_1_x, (blok3_1_y + 150));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 595, (blok3_1_y + 150));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 645, (blok3_1_y + 150));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 705, (blok3_1_y + 150));
+
+                    e.Graphics.DrawString("FM3", fontBold, sBrush, blok3_1_x, (blok3_1_y + 170));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 595, (blok3_1_y + 170));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 645, (blok3_1_y + 170));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 705, (blok3_1_y + 170));
+
+                    e.Graphics.DrawString("Prim", fontBold, sBrush, blok3_1_x, (blok3_1_y + 190));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 645, (blok3_1_y + 190));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 705, (blok3_1_y + 190));
+
+                    e.Graphics.DrawString("Ek Gelir Top.", fontBold, sBrush, blok3_1_x, (blok3_1_y + 210));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 595, (blok3_1_y + 210));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 645, (blok3_1_y + 210));
+                    e.Graphics.DrawString(item["Baslangic Saati"].ToString(), myFont, sBrush, 705, (blok3_1_y + 210));
+
+                    e.Graphics.DrawString("2018-Ocak", fontBold, sBrush, 625, 380);
+
+                    e.Graphics.DrawString("Dönemine ait maaþýmý ve fazla çalýþmalarýmý", myFont, sBrush, 555, 405);
+                    e.Graphics.DrawString("eksiksiz teslim aldým", myFont, sBrush, 605, 420);
+                    e.Graphics.DrawString("Ýmza", myFont, sBrush, 640, 435);
+                    #endregion
+                }
+            }         
+        }
